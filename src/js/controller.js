@@ -1,11 +1,11 @@
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import resultsView from './views/resultsView.js';
 
 const controlRecipes = async () => {
   try {
-    //const id = window.location.hash.slice(1);
-    const id = '5ed6604591c37cdc054bc886';
+    const id = window.location.hash.slice(1);
     console.log(id)
 
     if (!id) return;
@@ -24,16 +24,22 @@ const controlRecipes = async () => {
 
 const controlSearchResults = async function() {
   try {
+    resultsView.renderSpinner();
+    //get search query
     const query = searchView.getQuery();
     if (!query) return;
+
+    //load search results
     await model.loadSearchResults(query);
+
+    //render results
+    // model.state.search.results.map(result => resultsView.displayResults(result));
     console.log(model.state.search.results);
+    resultsView.render(model.state.search.results);
   } catch (err) {
     console.log(err);
   }
 };
-
-controlSearchResults();
 
 const init = function() {
   recipeView.addHandlerRender(controlRecipes);
